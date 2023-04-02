@@ -132,3 +132,4 @@ config.ini
 *.session
 .DS_Store
 .idea/
+data/
