@@ -23,3 +23,19 @@ api_hash = [some_hash]
 phone = [some_number]
 username = [some_user_name]
 ```
+
+
+## Proposed parsing pipeline: 
+
+- Define the seed channels:
+  - Make sure you have the correct config setup for `seed_channels_parsing` block
+  - Ratings provide usually block access to automatic parsing, but here is the solution: 
+    - Go to the [https://telemetr.io/](https://telemetr.io/en/country/ukraine?channelType=public&page=1) and download the html of the page with channels rating
+    - Repeat it for as many pages as needed (in our case we used two pages from Ukraine and Russia (~400 seed channels in total))
+  - Run the script to parse htmls and collect .csv: ```python modules/get_seed_channels.py```
+- Parse the messages from the channels:
+  - Make sure you have the correct config setup for `seed_channels_parsing` block
+  - Parse the messages from the seed channels to the unified directory
+  - Create the script for snowball parsing
+- Create the script for comments parsing
+- Create the script for channel user data parsing
