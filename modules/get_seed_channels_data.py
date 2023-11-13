@@ -63,7 +63,7 @@ async def get_messages(client: TelegramClient, channel_id, date_from=start_time,
 client = TelegramClient(username, api_id, api_hash)
 input_channels = pd.read_csv(input_data_path)
 with client:
-    for channel_id, channel_name in tqdm(zip(input_channels.ids[82:], input_channels.names[82:])):
+    for channel_id, channel_name in tqdm(zip(input_channels.ids, input_channels.names)):
         try:
             messages = client.loop.run_until_complete(get_messages(client, channel_id=channel_id))
             joblib.dump(messages, f'{output_data_path}/{channel_id}.data')
