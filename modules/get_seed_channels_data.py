@@ -47,7 +47,7 @@ async def get_messages(client: TelegramClient, channel_id, date_from=start_time,
             return messages
 
         messages.append({
-           "channel_name": channel_id,
+           "channel_name": message.peer_id.channel_id,
            "message_id": message.id,
            "message_text": message.text,
            "reactions": reactions,
@@ -63,6 +63,18 @@ async def get_messages(client: TelegramClient, channel_id, date_from=start_time,
 client = TelegramClient(username, api_id, api_hash)
 input_channels = pd.read_csv(input_data_path)
 with client:
-    for channel_id in tqdm(input_channels.ids):
-        messages = client.loop.run_until_complete(get_messages(client, channel_id=channel_id))
-        joblib.dump(messages, f'{output_data_path}/{channel_id}.data')
+    for channel_id, channel_name in tqdm(zip(input_channels.ids[82:], input_channels.names[82:])):
+        try:
+            messages = client.loop.run_until_complete(get_messages(client, channel_id=channel_id))
+            joblib.dump(messages, f'{output_data_path}/{channel_id}.data')
+        except ValueError as ve:
+            print(channel_id, str(ve))
+            print("Attempting with the name: ", channel_name)
+            try:
+                messages = client.loop.run_until_complete(get_messages(client, channel_id=channel_name))
+                joblib.dump(messages, f'{output_data_path}/{channel_id}.data')
+            except:
+                print("Skipping...")
+        except Exception as e:
+            print(channel_id, str(e))
+            print("Skipping...")

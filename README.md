@@ -29,7 +29,7 @@ username = [some_user_name]
 
 - Define the seed channels:
   - Make sure you have the correct config setup for `seed_channels_parsing` block
-  - Ratings provide usually block access to automatic parsing, but here is the solution: 
+  - We use top-200 popular pages from RU and UA as seed channels: 
     - Go to the [https://telemetr.io/](https://telemetr.io/en/country/ukraine?channelType=public&page=1) and download the html of the page with channels rating
     - Repeat it for as many pages as needed (in our case we used two pages from Ukraine and Russia (~400 seed channels in total))
   - Run the script to parse htmls and collect .csv: ```python modules/get_seed_channels.py```
