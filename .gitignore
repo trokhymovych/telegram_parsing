@@ -133,3 +133,4 @@ config.ini
 .DS_Store
 .idea/
 data/
+data_old/

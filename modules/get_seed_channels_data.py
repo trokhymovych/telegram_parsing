@@ -34,7 +34,10 @@ async def get_messages(client: TelegramClient, channel_id, date_from=start_time,
         reactions = []
         if message.reactions:
             for r in message.reactions.results:
-                reactions.append({"emoticon": r.reaction.emoticon, "count": r.count})
+                try:
+                    reactions.append({"emoticon": r.reaction.emoticon, "count": r.count})
+                except:
+                    pass  # Usually means some custom emoticon that we are skipping
         forward_id = None
         forward_name = None
         if message.fwd_from:
@@ -66,14 +69,19 @@ with client:
     for channel_id, channel_name in tqdm(zip(input_channels.ids, input_channels.names)):
         try:
             messages = client.loop.run_until_complete(get_messages(client, channel_id=channel_id))
-            joblib.dump(messages, f'{output_data_path}/{channel_id}.data')
+            if len(messages) > 0:
+                channel_id_ = messages[0]["channel_name"]
+                joblib.dump(messages, f'{output_data_path}/{channel_id_}.data')
         except ValueError as ve:
             print(channel_id, str(ve))
             print("Attempting with the name: ", channel_name)
             try:
                 messages = client.loop.run_until_complete(get_messages(client, channel_id=channel_name))
-                joblib.dump(messages, f'{output_data_path}/{channel_id}.data')
+                if len(messages) > 0:
+                    channel_id_ = messages[0]["channel_name"]
+                    joblib.dump(messages, f'{output_data_path}/{channel_id_}.data')
             except:
+                print(channel_id, str(e))
                 print("Skipping...")
         except Exception as e:
             print(channel_id, str(e))
